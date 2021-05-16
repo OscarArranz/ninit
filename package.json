@@ -19,5 +19,9 @@
   "homepage": "https://github.com/OscarArranz/ninit#readme",
   "bin": {
     "ninit": "index.js"
+  },
+  "dependencies": {
+    "caporal": "^1.4.0",
+    "chalk": "^4.1.1"
   }
 }
