@@ -1,33 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const readline = require('readline');
 const chalk = require('chalk');
+const RequiredQuestion = require('./requiredQuestion');
 
 const configFile = path.join(process.cwd(), 'config.json');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-const requiredQuestion = (query, callback, options = { customRequirement: () => true }) => {
-  const { customRequirement } = options;
-
-  const recursiveQuestion = resolve => {
-    rl.question(query, answer => {
-      if (answer && customRequirement(answer.toUpperCase())) {
-        if (callback) callback(answer);
-
-        resolve(answer);
-        return;
-      }
-
-      recursiveQuestion(resolve);
-    });
-  };
-
-  return new Promise(recursiveQuestion);
-};
 
 const yesOrNoRequirement = answer => (
   answer === 'Y'.toUpperCase() ||
@@ -38,8 +14,9 @@ const yesOrNoRequirement = answer => (
 
 const config = async () => {
   const config = {}
+  const requiredQuestion = new RequiredQuestion();
 
-  config.workspace = await requiredQuestion(
+  config.workspace = await requiredQuestion.askQuestion(
     'Workspace directory (you can drag your folder here and the path will be copied): ',
     undefined,
     {
@@ -54,7 +31,7 @@ const config = async () => {
     }
   );
 
-  const customEditor = await requiredQuestion(
+  const customEditor = await requiredQuestion.askQuestion(
     `\nNinit runs ${chalk.blueBright('Visual Studio Code')} by default\nDo you want to set up a different code editor? (Y/N): `,
     undefined,
     { customRequirement: yesOrNoRequirement }
@@ -65,12 +42,12 @@ const config = async () => {
     customEditor.toUpperCase() === 'YES'.toUpperCase();
 
   if (configCustomEditor) {
-    config.customEditorScript = await requiredQuestion(
+    config.customEditorScript = await requiredQuestion.askQuestion(
       `\nEnter your editor's run script: `
     );
   }
 
-  rl.close();
+  requiredQuestion.close();
 
   fs.writeFile(
     configFile,
