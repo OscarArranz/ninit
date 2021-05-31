@@ -12,7 +12,7 @@ const configFilePath = path.join(process.cwd(), 'config.json');
 const printTitle = () => {
   const bar = '************************************';
   const spaces = '                   ';
-  const version = 'v0.1.0';
+  const version = 'v0.1.1';
 
   console.log(chalk.green(bar));
   console.log(

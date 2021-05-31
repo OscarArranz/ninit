@@ -1,6 +1,6 @@
 {
   "name": "ninitjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ninit is a Node project initialization all-in-one solution.",
   "main": "index.js",
   "scripts": {
