@@ -16,7 +16,7 @@ const config = async () => {
   const config = {}
   const requiredQuestion = new RequiredQuestion();
 
-  config.workspace = await requiredQuestion.askQuestion(
+  config.workspace = (await requiredQuestion.askQuestion(
     'Workspace directory (you can drag your folder here and the path will be copied): ',
     undefined,
     {
@@ -29,7 +29,7 @@ const config = async () => {
         }
       }
     }
-  );
+  )).replace(/'/g, '').replace(/\\/g, '');
 
   const customEditor = await requiredQuestion.askQuestion(
     `\nNinit runs ${chalk.blueBright('Visual Studio Code')} by default\nDo you want to set up a different code editor? (Y/N): `,
@@ -52,7 +52,12 @@ const config = async () => {
   fs.writeFile(
     configFile,
     JSON.stringify(config, undefined, 2),
-    () => console.log(chalk.bold.green('\nNinit ') + chalk.greenBright('has been correctly configurated!'))
+    () => {
+      console.log(
+        chalk.bold.green('\nNinit'),
+        chalk.greenBright('has been correctly configurated!')
+        );
+    }
   );
 }
 
